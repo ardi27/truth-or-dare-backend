@@ -13,7 +13,7 @@ class UsersController extends Controller
         $res['code'] = 404;
         $res['results'] = null;
         $res['message'] = 'an error occured';
-        if ($users = User::all()) {
+        if ($users = User::paginate(10)) {
             $res['code'] = 200;
             $res['results'] = $users;
             $res['message'] = "Data retrieved succesfully";
