@@ -24,4 +24,21 @@ class UsersController extends Controller
         }
         return response()->json($res, $res['code']);
     }
+    public function updateProfile(Request $request)
+    {
+        $res['code'] = 404;
+        $res['message'] = 'An error occured';
+        $res['results'] = null;
+        if ($request->has('password')) {
+            $res['code'] = 422;
+            $res['message'] = "Cannot update password, please use change password endpoint";
+            return response()->json($res, $res['code']);
+        }
+        if ($user = User::find($request->uuid)) {
+            $user->update($request->all());
+            $res['code'] = 200;
+            $res['message'] = "Profile succesfully updated";
+        }
+        return response()->json($res, $res['code']);
+    }
 }

@@ -18,7 +18,11 @@ use App\Http\Controllers\UsersController;
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->get('/users', 'UsersController@index');
+
+$router->group(['prefix' => 'users'], function () use ($router) {
+    $router->get('/', 'UsersController@index');
+    $router->patch('/update_profile', 'UsersController@updateProfile');
+});
 $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('/register', 'AuthController@register');
     $router->post('/login', 'AuthController@login');
