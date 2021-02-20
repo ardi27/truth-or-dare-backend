@@ -10,8 +10,14 @@ class UsersController extends Controller
     //
     public function index()
     {
-        $users = User::all();
-        // $url = parse_url(getenv("DATABASE_URL"));
-        return response()->json($users, 200);
+        $res['code'] = 404;
+        $res['results'] = null;
+        $res['message'] = 'an error occured';
+        if ($users = User::all()) {
+            $res['code'] = 200;
+            $res['results'] = $users;
+            $res['message'] = "Data retrieved succesfully";
+        }
+        return response()->json($res, $res['code']);
     }
 }
