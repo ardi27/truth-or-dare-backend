@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Http\Controllers\UsersController;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -15,4 +17,8 @@
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+$router->get('/users', 'UsersController@index');
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('/register', 'AuthController@register');
 });
