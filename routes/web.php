@@ -27,3 +27,11 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('/register', 'AuthController@register');
     $router->post('/login', 'AuthController@login');
 });
+$router->group((['prefix' => 'truth']), function () use ($router) {
+    $router->get('/random', 'TruthController@random');
+    $router->post('/store', 'TruthController@store');
+});
+$router->group((['prefix' => 'dare']), function () use ($router) {
+    $router->get('/random', 'DareController@random');
+    $router->post('/store', 'DareController@store');
+});

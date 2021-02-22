@@ -24,7 +24,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
     protected $table = "users";
     protected $primaryKey = "uuid";
-
+    protected $guarded = ['uuid'];
 
     /**
      * The attributes excluded from the model's JSON form.
