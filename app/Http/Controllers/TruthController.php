@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Utils\ResponseTemplate;
 use App\Models\Truth;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,6 +14,44 @@ class TruthController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.auth', ['except' => ['random']]);
+    }
+    public function index()
+    {
+        $res = ResponseTemplate::getResponse();
+        if ($truth = Truth::orderBy('created_at', 'desc')->paginate(10)) {
+            $res['code'] = 200;
+            $res['results'] = $truth;
+            $res['message'] = 'Truth succesfully retrieved';
+        }
+        return response()->json($res, $res['code']);
+    }
+    public function detail($uuid)
+    {
+        $res = ResponseTemplate::getResponse();
+        try {
+            $truth = Truth::findOrFail($uuid);
+            if ($truth) {
+                $res['code'] = 200;
+                $res['results'] = $truth;
+                $res['message'] = "Truth succesfully retrieved";
+            } else {
+                $res['message'] = "Truth not found";
+            }
+            return response()->json($res, $res['code']);
+        } catch (Exception $e) {
+            $res['message'] = "Truth not found";
+            return response()->json($res, $res['code']);
+        }
+    }
+    public function random()
+    {
+        $res = ResponseTemplate::getResponse();
+        if ($truth = Truth::inRandomOrder()->first()) {
+            $res['code'] = 200;
+            $res['results'] = $truth;
+            $res['message'] = 'Random truth retrieved succesfully';
+        }
+        return response()->json($res, $res['code']);
     }
     public function store(Request $request)
     {
@@ -34,14 +73,42 @@ class TruthController extends Controller
         }
         return response()->json($res, $res['code']);
     }
-    public function random()
+    public function update(Request $request, $uuid)
     {
         $res = ResponseTemplate::getResponse();
-        if ($truth = Truth::inRandomOrder()->first()) {
-            $res['code'] = 200;
-            $res['results'] = $truth;
-            $res['message'] = 'Random truth retrieved succesfully';
+        $validator = Validator::make($request->all(), [
+            'level' => 'in:easy,medium,hard'
+        ]);
+        if ($validator->fails()) {
+            $res['code'] = 417;
+            $res['results'] = $validator->errors()->first();
+            return response()->json($res, $res['code']);
         }
-        return response()->json($res, $res['code']);
+        try {
+            $truth = Truth::findOrFail($uuid);
+            $truth->update($request->all());
+            $res['message'] = 'Succesfully updated';
+            $res['code'] = 200;
+            return response()->json($res, $res['code']);
+        } catch (Exception $e) {
+            $res['message'] = 'Truth not found';
+            return response()->json($res, $res['code']);
+        }
+    }
+    public function delete($uuid)
+    {
+        $res = ResponseTemplate::getResponse();
+        try {
+            $truth = Truth::findOrFail($uuid);
+            if ($truth) {
+                $truth->delete();
+                $res['message'] = 'Succesfully deleted';
+                $res['code'] = 200;
+            }
+            return response()->json($res, $res['code']);
+        } catch (Exception $e) {
+            $res['message'] = 'Truth not found';
+            return response()->json($res, $res['code']);
+        }
     }
 }
