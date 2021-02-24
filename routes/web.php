@@ -22,7 +22,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'users'], function () use ($router) {
     $router->get('/', 'UsersController@index');
     $router->patch('/update_profile', 'UsersController@updateProfile');
-    $router->patch('/update_password', 'UserController@updatePassword');
+    $router->patch('/update_password', 'UsersController@updatePassword');
 });
 $router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('/register', 'AuthController@register');
