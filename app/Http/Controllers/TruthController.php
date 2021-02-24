@@ -18,7 +18,7 @@ class TruthController extends Controller
     public function index()
     {
         $res = ResponseTemplate::getResponse();
-        if ($truth = Truth::orderBy('created_at', 'desc')->paginate(10)) {
+        if ($truth = Truth::with('user')->orderBy('created_at', 'desc')->paginate(10)) {
             $res['code'] = 200;
             $res['results'] = $truth;
             $res['message'] = 'Truth succesfully retrieved';
@@ -29,7 +29,7 @@ class TruthController extends Controller
     {
         $res = ResponseTemplate::getResponse();
         try {
-            $truth = Truth::findOrFail($uuid);
+            $truth = Truth::with('user')->findOrFail($uuid);
             if ($truth) {
                 $res['code'] = 200;
                 $res['results'] = $truth;
@@ -46,7 +46,7 @@ class TruthController extends Controller
     public function random()
     {
         $res = ResponseTemplate::getResponse();
-        if ($truth = Truth::inRandomOrder()->first()) {
+        if ($truth = Truth::with('user')->inRandomOrder()->first()) {
             $res['code'] = 200;
             $res['results'] = $truth;
             $res['message'] = 'Random truth retrieved succesfully';
@@ -67,6 +67,7 @@ class TruthController extends Controller
             $res['results'] = $validator->errors()->first();
             return response()->json($res, $res['code']);
         }
+        $request->request->add(['user_id' => $request->auth->uuid]);
         if ($truth = Truth::create($request->all())) {
             $res['code'] = 201;
             $res['message'] = 'Truth succesfully created';

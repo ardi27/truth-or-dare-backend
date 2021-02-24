@@ -34,4 +34,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+    public function truth()
+    {
+        return $this->hasMany(Truth::class, "user_id", "uuid");
+    }
+    public function dare()
+    {
+        return $this->hasMany(Dare::class, "user_id", "uuid");
+    }
 }

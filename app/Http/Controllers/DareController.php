@@ -18,7 +18,7 @@ class DareController extends Controller
     public function index()
     {
         $res = ResponseTemplate::getResponse();
-        if ($dare = Dare::orderBy('created_at', 'desc')->paginate(10)) {
+        if ($dare = Dare::with('user')->orderBy('created_at', 'desc')->paginate(10)) {
             $res['code'] = 200;
             $res['results'] = $dare;
             $res['message'] = 'dare succesfully retrieved';
@@ -29,7 +29,7 @@ class DareController extends Controller
     {
         $res = ResponseTemplate::getResponse();
         try {
-            $dare = Dare::findOrFail($uuid);
+            $dare = Dare::with('user')->findOrFail($uuid);
             if ($dare) {
                 $res['code'] = 200;
                 $res['results'] = $dare;
@@ -55,6 +55,7 @@ class DareController extends Controller
             $res['results'] = $validator->errors()->first();
             return response()->json($res, $res['code']);
         }
+        $request->request->add(['user_id' => $request->auth->uuid]);
         if ($dare = Dare::create($request->all())) {
             $res['code'] = 201;
             $res['message'] = 'Dare succesfully created';
@@ -64,7 +65,7 @@ class DareController extends Controller
     public function random()
     {
         $res = ResponseTemplate::getResponse();
-        if ($dare = Dare::inRandomOrder()->first()) {
+        if ($dare = Dare::with('user')->inRandomOrder()->first()) {
             $res['code'] = 200;
             $res['results'] = $dare;
             $res['message'] = 'Random dare retrieved succesfully';
