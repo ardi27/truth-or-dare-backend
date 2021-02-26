@@ -43,6 +43,16 @@ class DareController extends Controller
             return response()->json($res, $res['code']);
         }
     }
+    public function getByUser(Request $request)
+    {
+        $res = ResponseTemplate::getResponse();
+        if ($dare = Dare::where('user_id', $request->auth->uuid)->orderBy('created_at', 'desc')->paginate(10)) {
+            $res['code'] = 200;
+            $res['results'] = $dare;
+            $res['message'] = "Truth retrieved successfully";
+        };
+        return response()->json($res, $res['code']);
+    }
     public function store(Request $request)
     {
         $res = ResponseTemplate::getResponse();

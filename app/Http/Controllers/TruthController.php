@@ -53,6 +53,16 @@ class TruthController extends Controller
         }
         return response()->json($res, $res['code']);
     }
+    public function getByUser(Request $request)
+    {
+        $res = ResponseTemplate::getResponse();
+        if ($truth = Truth::where('user_id', $request->auth->uuid)->orderBy('created_at', 'desc')->paginate(10)) {
+            $res['code'] = 200;
+            $res['results'] = $truth;
+            $res['message'] = "Truth retrieved successfully";
+        };
+        return response()->json($res, $res['code']);
+    }
     public function store(Request $request)
     {
         $res['code'] = 404;

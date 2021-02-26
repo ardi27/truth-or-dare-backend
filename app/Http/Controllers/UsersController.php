@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Utils\ResponseTemplate;
+use App\Models\Truth;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
