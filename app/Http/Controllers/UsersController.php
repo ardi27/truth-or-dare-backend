@@ -50,7 +50,7 @@ class UsersController extends Controller
         $res['results'] = null;
         if ($request->has('password')) {
             $res['code'] = 422;
-            $res['message'] = "Cannot update password, please use change password endpoint";
+            $res['message'] = "Cannot update password";
             return response()->json($res, $res['code']);
         }
         if ($user = User::find($request->uuid)) {
