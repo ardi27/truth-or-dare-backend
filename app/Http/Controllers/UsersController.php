@@ -29,6 +29,20 @@ class UsersController extends Controller
         }
         return response()->json($res, $res['code']);
     }
+    public function profile(Request $request)
+    {
+        $res = ResponseTemplate::getResponse();
+        try {
+            if ($user = User::findOrFail($request->auth->uuid)) {
+                $res['code'] = 200;
+                $res['message'] = "User succesfully retrieved";
+                $res['results'] = $user;
+            }
+            return response()->json($res, $res['code']);
+        } catch (Exception $e) {
+            return response()->json($res, $res['code']);
+        }
+    }
     public function updateProfile(Request $request)
     {
         $res['code'] = 404;

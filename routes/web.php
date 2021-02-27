@@ -21,6 +21,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'users'], function () use ($router) {
     $router->get('/', 'UsersController@index');
+    $router->get('/profile', "UsersController@profile");
     $router->patch('/update_profile', 'UsersController@updateProfile');
     $router->patch('/update_password', 'UsersController@updatePassword');
 });
