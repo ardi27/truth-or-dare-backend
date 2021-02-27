@@ -50,10 +50,10 @@ class UsersController extends Controller
         $res['results'] = null;
         if ($request->has('password')) {
             $res['code'] = 422;
-            $res['message'] = "Cannot update password";
+            $res['message'] = "Cannot update password,please use change password endpoint";
             return response()->json($res, $res['code']);
         }
-        if ($user = User::find($request->uuid)) {
+        if ($user = User::find($request->auth->uuid)) {
             $user->update($request->all());
             $res['code'] = 200;
             $res['message'] = "Profile succesfully updated";
