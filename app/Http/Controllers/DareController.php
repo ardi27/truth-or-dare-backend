@@ -72,12 +72,16 @@ class DareController extends Controller
         }
         return response()->json($res, $res['code']);
     }
-    public function random()
+    public function random(Request $request)
     {
         $res = ResponseTemplate::getResponse();
-        if ($dare = Dare::with('user')->inRandomOrder()->first()) {
+        $dare = Dare::with('user')->inRandomOrder();
+        if ($request->has("level") && $request->level != "") {
+            $dare->where("level", $request->level);
+        }
+        if ($dare) {
             $res['code'] = 200;
-            $res['results'] = $dare;
+            $res['results'] = $dare->first();
             $res['message'] = 'Random dare retrieved succesfully';
         }
         return response()->json($res, $res['code']);

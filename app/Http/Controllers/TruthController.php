@@ -43,12 +43,16 @@ class TruthController extends Controller
             return response()->json($res, $res['code']);
         }
     }
-    public function random()
+    public function random(Request $request)
     {
         $res = ResponseTemplate::getResponse();
-        if ($truth = Truth::with('user')->inRandomOrder()->first()) {
+        $truth = Truth::with('user')->inRandomOrder();
+        if ($request->has("level") && $request->level != "") {
+            $truth->where("level", $request->level);
+        }
+        if ($truth) {
             $res['code'] = 200;
-            $res['results'] = $truth;
+            $res['results'] = $truth->first();
             $res['message'] = 'Random truth retrieved succesfully';
         }
         return response()->json($res, $res['code']);
